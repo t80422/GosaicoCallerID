@@ -41,7 +41,7 @@ namespace gosaicoCallerID
             dataGridView1.Columns[6].HeaderText = "Store";
             dataGridView1.Columns[7].HeaderText = "API ID";
             //Log顯示
-            List<string> logs= LogMsg.ReadLogFile(AppDomain.CurrentDomain.BaseDirectory+ $"\\Log\\INF\\INF_{DateTime.Now:yyyyMMdd}.log");
+            //List<string> logs= LogMsg.ReadLogFile(AppDomain.CurrentDomain.BaseDirectory+ $"\\Log\\INF\\INF_{DateTime.Now:yyyyMMdd}.log");
             //logs.
         }
     }
