@@ -29,14 +29,18 @@ namespace gosaicoCallerID
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.txtAPI_url = new System.Windows.Forms.TextBox();
             this.txtStroreId = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtLog = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label2 = new System.Windows.Forms.Label();
+            this.tmrNet = new System.Windows.Forms.Timer(this.components);
+            this.tmrServer = new System.Windows.Forms.Timer(this.components);
+            this.tmrCheck = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -67,30 +71,29 @@ namespace gosaicoCallerID
             this.txtAPI_url.Location = new System.Drawing.Point(12, 382);
             this.txtAPI_url.Name = "txtAPI_url";
             this.txtAPI_url.ReadOnly = true;
-            this.txtAPI_url.Size = new System.Drawing.Size(569, 30);
+            this.txtAPI_url.Size = new System.Drawing.Size(464, 30);
             this.txtAPI_url.TabIndex = 3;
             this.txtAPI_url.Text = "http://3.108.53.120/phone";
             // 
             // txtStroreId
             // 
             this.txtStroreId.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txtStroreId.Location = new System.Drawing.Point(682, 382);
+            this.txtStroreId.Location = new System.Drawing.Point(577, 380);
             this.txtStroreId.Name = "txtStroreId";
             this.txtStroreId.ReadOnly = true;
             this.txtStroreId.Size = new System.Drawing.Size(100, 30);
             this.txtStroreId.TabIndex = 5;
             this.txtStroreId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox3
+            // txtLog
             // 
-            this.textBox3.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox3.Location = new System.Drawing.Point(12, 426);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(770, 239);
-            this.textBox3.TabIndex = 6;
-            this.textBox3.Text = "2023/06/29 12:23:11 [INF] xxxooo 0923267998 Ringing\r\n2023/06/29 12:40:55 [ERROR] " +
-    "network error";
+            this.txtLog.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.txtLog.Location = new System.Drawing.Point(12, 426);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
+            this.txtLog.Size = new System.Drawing.Size(770, 239);
+            this.txtLog.TabIndex = 6;
             // 
             // statusStrip1
             // 
@@ -98,7 +101,7 @@ namespace gosaicoCallerID
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 668);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(799, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(801, 22);
             this.statusStrip1.TabIndex = 7;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -106,7 +109,7 @@ namespace gosaicoCallerID
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(784, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(786, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = "Copyright (C) Singularity & Infinity. All rights reserved.";
             // 
@@ -114,20 +117,32 @@ namespace gosaicoCallerID
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(587, 385);
+            this.label2.Location = new System.Drawing.Point(482, 383);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 19);
             this.label2.TabIndex = 8;
             this.label2.Text = "門市店號";
             // 
+            // tmrNet
+            // 
+            this.tmrNet.Tick += new System.EventHandler(this.tmrNet_Tick);
+            // 
+            // tmrServer
+            // 
+            this.tmrServer.Tick += new System.EventHandler(this.tmrServer_Tick);
+            // 
+            // tmrCheck
+            // 
+            this.tmrCheck.Tick += new System.EventHandler(this.tmrCheck_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(799, 690);
+            this.ClientSize = new System.Drawing.Size(801, 690);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.txtLog);
             this.Controls.Add(this.txtStroreId);
             this.Controls.Add(this.txtAPI_url);
             this.Controls.Add(this.label1);
@@ -147,10 +162,13 @@ namespace gosaicoCallerID
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtAPI_url;
         private System.Windows.Forms.TextBox txtStroreId;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Timer tmrNet;
+        private System.Windows.Forms.Timer tmrServer;
+        private System.Windows.Forms.Timer tmrCheck;
     }
 }
 
