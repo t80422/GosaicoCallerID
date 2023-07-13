@@ -137,7 +137,8 @@ namespace gosaicoCallerID
 
         public void LogTextBox(string msg)
         {
-            txtLog.AppendText(msg + Environment.NewLine);
+            //txtLog.AppendText(msg + Environment.NewLine);
+            txtLog.Text = msg + "\r\n" + txtLog.Text;
         }
 
         //檢查網路連線
