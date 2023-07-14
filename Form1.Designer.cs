@@ -31,16 +31,16 @@ namespace gosaicoCallerID
         {
             this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblDevice = new System.Windows.Forms.Label();
             this.txtAPI_url = new System.Windows.Forms.TextBox();
             this.txtStroreId = new System.Windows.Forms.TextBox();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label2 = new System.Windows.Forms.Label();
-            this.tmrNet = new System.Windows.Forms.Timer(this.components);
             this.tmrServer = new System.Windows.Forms.Timer(this.components);
-            this.tmrCheck = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.tmrNet = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -54,31 +54,31 @@ namespace gosaicoCallerID
             this.dataGridView1.Size = new System.Drawing.Size(770, 318);
             this.dataGridView1.TabIndex = 1;
             // 
-            // label1
+            // lblDevice
             // 
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.label1.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(9, 341);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(773, 23);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "設備未啟用";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDevice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.lblDevice.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblDevice.Location = new System.Drawing.Point(12, 341);
+            this.lblDevice.Name = "lblDevice";
+            this.lblDevice.Size = new System.Drawing.Size(770, 23);
+            this.lblDevice.TabIndex = 2;
+            this.lblDevice.Text = "設備未啟用";
+            this.lblDevice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtAPI_url
             // 
             this.txtAPI_url.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txtAPI_url.Location = new System.Drawing.Point(12, 382);
+            this.txtAPI_url.Location = new System.Drawing.Point(84, 382);
             this.txtAPI_url.Name = "txtAPI_url";
             this.txtAPI_url.ReadOnly = true;
-            this.txtAPI_url.Size = new System.Drawing.Size(464, 30);
+            this.txtAPI_url.Size = new System.Drawing.Size(497, 30);
             this.txtAPI_url.TabIndex = 3;
             this.txtAPI_url.Text = "http://3.108.53.120/phone";
             // 
             // txtStroreId
             // 
             this.txtStroreId.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txtStroreId.Location = new System.Drawing.Point(577, 380);
+            this.txtStroreId.Location = new System.Drawing.Point(682, 382);
             this.txtStroreId.Name = "txtStroreId";
             this.txtStroreId.ReadOnly = true;
             this.txtStroreId.Size = new System.Drawing.Size(100, 30);
@@ -92,14 +92,14 @@ namespace gosaicoCallerID
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(770, 239);
+            this.txtLog.Size = new System.Drawing.Size(770, 302);
             this.txtLog.TabIndex = 6;
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 668);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 744);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(801, 22);
             this.statusStrip1.TabIndex = 7;
@@ -117,37 +117,45 @@ namespace gosaicoCallerID
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(482, 383);
+            this.label2.Location = new System.Drawing.Point(587, 385);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 19);
             this.label2.TabIndex = 8;
             this.label2.Text = "門市店號";
             // 
-            // tmrNet
-            // 
-            this.tmrNet.Tick += new System.EventHandler(this.tmrNet_Tick);
-            // 
             // tmrServer
             // 
             this.tmrServer.Tick += new System.EventHandler(this.tmrServer_Tick);
             // 
-            // tmrCheck
+            // label1
             // 
-            this.tmrCheck.Tick += new System.EventHandler(this.tmrCheck_Tick);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Location = new System.Drawing.Point(8, 385);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 19);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "API url";
+            // 
+            // tmrNet
+            // 
+            this.tmrNet.Tick += new System.EventHandler(this.tmrNet_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(801, 690);
+            this.ClientSize = new System.Drawing.Size(801, 766);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.txtStroreId);
             this.Controls.Add(this.txtAPI_url);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblDevice);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
@@ -159,16 +167,16 @@ namespace gosaicoCallerID
 
         #endregion
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblDevice;
         private System.Windows.Forms.TextBox txtAPI_url;
         private System.Windows.Forms.TextBox txtStroreId;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Timer tmrNet;
         private System.Windows.Forms.Timer tmrServer;
-        private System.Windows.Forms.Timer tmrCheck;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer tmrNet;
     }
 }
 

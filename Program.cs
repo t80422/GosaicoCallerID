@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static gosaicoCallerID.Form1;
@@ -212,23 +213,68 @@ namespace gosaicoCallerID
             return true;
         }
 
-        public static bool CheckServer(string ipString, int port)
+        public static bool CheckServer(string ipString, int port,ref string errorMsg)
         {
             System.Net.Sockets.TcpClient tcpClient = new System.Net.Sockets.TcpClient() { SendTimeout = 1000 };
             IPAddress ip = IPAddress.Parse(ipString);
             try
             {
-                tcpClient.Connect(ip, port);
+                tcpClient.Connect(ip,port);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //连接失败
-                return false;
+                errorMsg = ex.Message;
             }
-            bool right = tcpClient.Connected;
+            bool result = tcpClient.Connected;
             tcpClient.Close();
             tcpClient.Dispose();
-            return right;
+            return result;
         }
     }
+
+    /// <summary>
+    /// 話機物件
+    /// </summary>
+    public class Phone
+    {
+        private int _line;
+        private string _num;
+        /// <summary>
+        /// 話機狀態
+        /// </summary>
+        public string Status;
+        public string API;
+        private string _time;
+        private string _date;
+
+        /// <summary>
+        /// 輸入現在日期時間
+        /// </summary>
+        public DateTime Now
+        {
+            set
+            {
+                DateTime dt = value;
+                _date = dt.ToString("yyyy/MM/dd");
+                _time = dt.ToString("HH:mm:ss");
+            }
+        }
+
+        public string Time { get => _time; }
+        public string Date { get => _date; }
+        /// <summary>
+        /// 電話號碼
+        /// </summary>
+        public string Num
+        {
+            get => _num;
+            set => _num = Regex.Replace(value, "[^0-9]", "");
+        }
+
+        /// <summary>
+        ///線路
+        /// </summary>
+        public int Line { get => _line; set => _line = value + 1; }
+    }
+
 }
