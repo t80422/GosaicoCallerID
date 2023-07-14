@@ -1,4 +1,2 @@
-執行vs後會產生bin\Debug\ 放到這裡
-e_sqlite3.dll
-gosaicoCallerID.db
-放這兩個檔案
+除了 .gitKeep 其他的檔案放到 bin\Debug\
+vs建置後會產生 上述的路徑
