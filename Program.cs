@@ -52,7 +52,20 @@ namespace gosaicoCallerID
 
     public static class SQLLite
     {
-        private static string _connectString = "Data Source = " + ConfigurationManager.AppSettings["DataSource"];
+        private static string filePath = ConfigurationManager.AppSettings["DataSource"];
+        private static string _connectString = "Data Source = " + filePath;
+
+        /// <summary>
+        /// 檢查SQL是否可以連線
+        /// </summary>
+        public static void CheckSqlExist()
+        {
+            if (!File.Exists(filePath))
+            {
+                ErrorMsg("找不到資料庫");
+            }
+        }
+
         /// <summary>
         /// SQL Lite 搜尋
         /// </summary>
@@ -203,6 +216,11 @@ namespace gosaicoCallerID
     {
         [DllImport("wininet.dll")]
         private extern static bool InternetGetConnectedState(ref int Description, int ReservedValue);
+
+        /// <summary>
+        /// 檢查網路連線
+        /// </summary>
+        /// <returns></returns>
         public static bool InternetConnect()
         {
             int dwFlag = new int();
@@ -213,18 +231,26 @@ namespace gosaicoCallerID
             return true;
         }
 
-        public static bool CheckServer(string ipString, int port,ref string errorMsg)
+        /// <summary>
+        /// 檢查伺服器連線
+        /// </summary>
+        /// <param name="ipString"></param>
+        /// <param name="port"></param>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
+        public static bool CheckServer(ref string errMsg)
         {
             System.Net.Sockets.TcpClient tcpClient = new System.Net.Sockets.TcpClient() { SendTimeout = 1000 };
-            IPAddress ip = IPAddress.Parse(ipString);
+            Uri uri = new Uri(ConfigurationManager.AppSettings["API_url"]);
             try
             {
-                tcpClient.Connect(ip,port);
+                tcpClient.Connect(uri.Host, uri.Port);
             }
             catch (Exception ex)
             {
-                errorMsg = ex.Message;
+                errMsg = ex.Message;
             }
+
             bool result = tcpClient.Connected;
             tcpClient.Close();
             tcpClient.Dispose();

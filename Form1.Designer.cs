@@ -38,9 +38,9 @@ namespace gosaicoCallerID
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label2 = new System.Windows.Forms.Label();
-            this.tmrServer = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.tmrNet = new System.Windows.Forms.Timer(this.components);
+            this.btnServerConnect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -71,17 +71,16 @@ namespace gosaicoCallerID
             this.txtAPI_url.Location = new System.Drawing.Point(84, 382);
             this.txtAPI_url.Name = "txtAPI_url";
             this.txtAPI_url.ReadOnly = true;
-            this.txtAPI_url.Size = new System.Drawing.Size(497, 30);
+            this.txtAPI_url.Size = new System.Drawing.Size(450, 30);
             this.txtAPI_url.TabIndex = 3;
-            this.txtAPI_url.Text = "http://3.108.53.120/phone";
             // 
             // txtStroreId
             // 
             this.txtStroreId.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txtStroreId.Location = new System.Drawing.Point(682, 382);
+            this.txtStroreId.Location = new System.Drawing.Point(731, 382);
             this.txtStroreId.Name = "txtStroreId";
             this.txtStroreId.ReadOnly = true;
-            this.txtStroreId.Size = new System.Drawing.Size(100, 30);
+            this.txtStroreId.Size = new System.Drawing.Size(50, 30);
             this.txtStroreId.TabIndex = 5;
             this.txtStroreId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -117,15 +116,11 @@ namespace gosaicoCallerID
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(587, 385);
+            this.label2.Location = new System.Drawing.Point(636, 385);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 19);
             this.label2.TabIndex = 8;
             this.label2.Text = "門市店號";
-            // 
-            // tmrServer
-            // 
-            this.tmrServer.Tick += new System.EventHandler(this.tmrServer_Tick);
             // 
             // label1
             // 
@@ -141,11 +136,24 @@ namespace gosaicoCallerID
             // 
             this.tmrNet.Tick += new System.EventHandler(this.tmrNet_Tick);
             // 
+            // btnServerConnect
+            // 
+            this.btnServerConnect.AutoSize = true;
+            this.btnServerConnect.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnServerConnect.Location = new System.Drawing.Point(540, 378);
+            this.btnServerConnect.Name = "btnServerConnect";
+            this.btnServerConnect.Size = new System.Drawing.Size(90, 34);
+            this.btnServerConnect.TabIndex = 10;
+            this.btnServerConnect.Text = "重新連線";
+            this.btnServerConnect.UseVisualStyleBackColor = true;
+            this.btnServerConnect.Click += new System.EventHandler(this.btnServerConnect_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(801, 766);
+            this.Controls.Add(this.btnServerConnect);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
@@ -174,9 +182,9 @@ namespace gosaicoCallerID
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Timer tmrServer;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer tmrNet;
+        private System.Windows.Forms.Button btnServerConnect;
     }
 }
 

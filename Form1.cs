@@ -40,12 +40,9 @@ namespace gosaicoCallerID
         public static extern bool AD800_GetCallerId(int channel, StringBuilder number, int len);
 
         public const int WM_AD800MSG = 1024 + 1800;
-        string ip = ConfigurationManager.AppSettings["ServerIP"];
-        int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
         //啟用中的話機集合 key:話機編號
         Dictionary<int, Phone> phones = new Dictionary<int, Phone>();
         bool isNetConnect;
-        bool isServerConnect;
 
         public enum LogType
         {
@@ -101,7 +98,7 @@ namespace gosaicoCallerID
         private void Form1_Load(object sender, EventArgs e)
         {
             //標題
-            Text = ConfigurationManager.AppSettings["Title"] + " v0.0.1";
+            Text = ConfigurationManager.AppSettings["Title"] + " v0.0.2";
             //門市店號
             txtStroreId.Text = ConfigurationManager.AppSettings["StoreID"];
             //API url
@@ -115,17 +112,16 @@ namespace gosaicoCallerID
             dataGridView1.Columns.Add("call_status", "Status");
             dataGridView1.Columns.Add("call_api_id", "API ID");
 
+            AD800_SetMsgHwnd(Handle.ToInt32());
+
+            SQLLite.CheckSqlExist();
+
             //設定檢查網路、伺服器連線狀態時間
             tmrNet.Interval = int.Parse(ConfigurationManager.AppSettings["CheckNet"]) * 1000;
-            tmrServer.Interval = int.Parse(ConfigurationManager.AppSettings["CheckServer"]) * 1000;
             isNetConnect = true;
             tmrNet_Tick(sender, e);
             tmrNet.Enabled = true;
-            isServerConnect = true;
-            //tmrServer_Tick(sender, e);
-            //tmrServer.Enabled = true;
-
-            AD800_SetMsgHwnd(Handle.ToInt32());
+            btnServerConnect.PerformClick();
         }
 
         protected override void DefWndProc(ref Message m)
@@ -270,28 +266,6 @@ namespace gosaicoCallerID
             txtLog.Text = msg + "\r\n" + txtLog.Text;
         }
 
-        private void tmrServer_Tick(object sender, EventArgs e)
-        {
-            string errMsg = "";
-            if (CheckConnect.CheckServer(ip, port, ref errMsg))
-            {
-                if (!isServerConnect)
-                {
-                    isServerConnect = true;
-                    new LogMsg(LogType.INF, "伺服器已連線");
-                }
-            }
-            else
-            {
-                if (isServerConnect)
-                {
-                    isServerConnect = false;
-                    new LogMsg(LogType.ERROR, "伺服器斷線");
-                    MessageBox.Show(errMsg, "伺服器斷線");
-                }
-            }
-        }
-
         private void tmrNet_Tick(object sender, EventArgs e)
         {
             if (CheckConnect.InternetConnect())
@@ -311,6 +285,23 @@ namespace gosaicoCallerID
                     MessageBox.Show("網路斷線", "警告");
                 }
             }
+        }
+
+        private void btnServerConnect_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            string errMsg = "";
+
+            if (CheckConnect.CheckServer(ref errMsg))
+            {
+                new LogMsg(LogType.INF, "伺服器已連線");
+            }
+            else
+            {
+                new LogMsg(LogType.ERROR, "伺服器斷線");
+                MessageBox.Show(errMsg, "伺服器斷線");
+            }
+            Cursor.Current = Cursors.Default;
         }
     }
 }
