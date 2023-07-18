@@ -1,0 +1,68 @@
+; AD800Device.def : Declares the module parameters for the DLL.
+
+LIBRARY      "AD800Device"
+DESCRIPTION  'AD800Device Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here
+
+
+     AD800_Init
+	 AD800_Free
+
+	 AD800_SetMsgHwnd
+	 AD800_SetCallbackFun
+	 AD800_SetAudioCallbackFun
+	 AD800_SetFskCallbackFun
+ 
+	 AD800_GetTotalDev	
+ 	 AD800_GetTotalCh
+
+	 AD800_GetChState
+	 AD800_GetCallerId
+	 AD800_GetDialed
+	 AD800_GetVer
+	 AD800_GetDevSN
+
+	 AD800_SetHookVoltage
+	 AD800_SetHookTime
+ 	 AD800_GetHookVoltage
+	 AD800_GetHookTime
+	 AD800_SetRevCIDTime
+	 AD800_GetRevCIDTime
+
+	 AD800_SetRecVolume
+	 AD800_SetPlaybackVolume
+	 AD800_GetRecVolume
+	 AD800_GetPlaybackVolume
+
+ 	 AD800_StartFileRecFile
+ 	 AD800_StartMemRec
+	 AD800_GetMemRecBytes
+	 AD800_StopRec
+
+	 AD800_PlayFile
+	 AD800_PlayMem
+	 AD800_StopPlay
+
+	 AD800_VoiceTrigger
+	 AD800_StopVoiceTrigger
+	 AD800_SetVoiceThreshold
+	 AD800_SetSilenceThreshold
+	 AD800_GetVoiceThreshold
+	 AD800_GetSilenceThreshold
+	 
+	 AD800_DetBusyTone
+	 AD800_StopDetBusyTone
+
+	 AD800_SendDTMF
+
+	 AD800_PickUp
+	 AD800_HangUp
+
+	 AD800_DisconnectPhone
+	 AD800_ConnectPhone
+
+	 AD800_SetAGC
+
+		
