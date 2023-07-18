@@ -98,7 +98,7 @@ namespace gosaicoCallerID
         private void Form1_Load(object sender, EventArgs e)
         {
             //標題
-            Text = ConfigurationManager.AppSettings["Title"] + " v0.0.2";
+            Text = ConfigurationManager.AppSettings["Title"] + " v0.2";
             //門市店號
             txtStroreId.Text = ConfigurationManager.AppSettings["StoreID"];
             //API url
@@ -208,7 +208,7 @@ namespace gosaicoCallerID
                                         AD800_GetCallerId(phone.Line - 1, szBuff, 64);
                                         string str = szBuff.ToString();
                                         //市話打進來,若是同縣市就不會顯示區碼,所以要另外加進去
-                                        if (str[0] != '0') { str = ConfigurationManager.AppSettings["AreaCode"] + str; }
+                                        //if (str[0] != '0') { str = ConfigurationManager.AppSettings["AreaCode"] + str; }
                                         phone.Num = str;
                                         phone.Status = "Ringing";
                                         PhoneStatus(phone, iEvent.ToString(), iChannel.ToString(), lParam.ToString());
@@ -245,7 +245,6 @@ namespace gosaicoCallerID
 
         private void PhoneStatus(Phone phone, string Event, string channel, string lParam)
         {
-            //dataGridView1.Rows.Add(phone.Date, phone.Time, phone.Line, phone.Num, phone.Status);
             dataGridView1.Rows.Insert(0, phone.Date, phone.Time, phone.Line, phone.Num, phone.Status);
             new LogMsg(LogType.INF, $"Event:{Event},Channel:{channel} lParam:{lParam}");
             Dictionary<string, string> dic = new Dictionary<string, string>()
@@ -262,7 +261,6 @@ namespace gosaicoCallerID
 
         public void LogTextBox(string msg)
         {
-            //txtLog.AppendText(msg + Environment.NewLine);
             txtLog.Text = msg + "\r\n" + txtLog.Text;
         }
 
@@ -282,7 +280,6 @@ namespace gosaicoCallerID
                 {
                     new LogMsg(LogType.ERROR, "網路斷線");
                     isNetConnect = false;
-                    MessageBox.Show("網路斷線", "警告");
                 }
             }
         }
