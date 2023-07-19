@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -231,31 +233,31 @@ namespace gosaicoCallerID
             return true;
         }
 
-        /// <summary>
-        /// 檢查伺服器連線
-        /// </summary>
-        /// <param name="ipString"></param>
-        /// <param name="port"></param>
-        /// <param name="errorMsg"></param>
-        /// <returns></returns>
-        public static bool CheckServer(ref string errMsg)
-        {
-            System.Net.Sockets.TcpClient tcpClient = new System.Net.Sockets.TcpClient() { SendTimeout = 1000 };
-            Uri uri = new Uri(ConfigurationManager.AppSettings["API_url"]);
-            try
-            {
-                tcpClient.Connect(uri.Host, uri.Port);
-            }
-            catch (Exception ex)
-            {
-                errMsg = ex.Message;
-            }
+        ///// <summary>
+        ///// 檢查伺服器連線
+        ///// </summary>
+        ///// <param name="ipString"></param>
+        ///// <param name="port"></param>
+        ///// <param name="errorMsg"></param>
+        ///// <returns></returns>
+        //public static bool CheckServer(ref string errMsg)
+        //{
+        //    System.Net.Sockets.TcpClient tcpClient = new System.Net.Sockets.TcpClient() { SendTimeout = 1000 };
+        //    Uri uri = new Uri(ConfigurationManager.AppSettings["API_url"]);
+        //    try
+        //    {
+        //        tcpClient.Connect(uri.Host, uri.Port);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        errMsg = ex.Message;
+        //    }
 
-            bool result = tcpClient.Connected;
-            tcpClient.Close();
-            tcpClient.Dispose();
-            return result;
-        }
+        //    bool result = tcpClient.Connected;
+        //    tcpClient.Close();
+        //    tcpClient.Dispose();
+        //    return result;
+        //}
     }
 
     /// <summary>
@@ -300,7 +302,6 @@ namespace gosaicoCallerID
         /// <summary>
         ///線路
         /// </summary>
-        public int Line { get => _line; set => _line = value + 1; }
+        public int Line { get => _line; set => _line = value ; }
     }
-
 }

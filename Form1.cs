@@ -1,17 +1,12 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Configuration;
-using System.Reflection;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace gosaicoCallerID
 {
@@ -39,10 +34,12 @@ namespace gosaicoCallerID
         [DllImport("AD800Device.dll", EntryPoint = "AD800_GetCallerId")]
         public static extern bool AD800_GetCallerId(int channel, StringBuilder number, int len);
 
-        public const int WM_AD800MSG = 1024 + 1800;
-        //啟用中的話機集合 key:話機編號
-        Dictionary<int, Phone> phones = new Dictionary<int, Phone>();
+        public const int WM_AD800MSG = 1024 + 1800;//來電裝置觸發參數
+        Dictionary<int, Phone> phones = new Dictionary<int, Phone>();//啟用中的話機集合 key:話機編號
         bool isNetConnect;
+        int callingTime;
+        DateTime hookOffTime;
+        DateTime hookOnTime;
 
         public enum LogType
         {
@@ -98,7 +95,7 @@ namespace gosaicoCallerID
         private void Form1_Load(object sender, EventArgs e)
         {
             //標題
-            Text = ConfigurationManager.AppSettings["Title"] + " v0.2";
+            Text = ConfigurationManager.AppSettings["Title"] + " v0.3";
             //門市店號
             txtStroreId.Text = ConfigurationManager.AppSettings["StoreID"];
             //API url
@@ -111,19 +108,19 @@ namespace gosaicoCallerID
             dataGridView1.Columns.Add("call_num", "Num");
             dataGridView1.Columns.Add("call_status", "Status");
             dataGridView1.Columns.Add("call_api_id", "API ID");
-
+            //來電裝置訊息接收方式
             AD800_SetMsgHwnd(Handle.ToInt32());
 
             SQLLite.CheckSqlExist();
 
-            //設定檢查網路、伺服器連線狀態時間
+            //設定檢查網路狀態時間
             tmrNet.Interval = int.Parse(ConfigurationManager.AppSettings["CheckNet"]) * 1000;
             isNetConnect = true;
             tmrNet_Tick(sender, e);
             tmrNet.Enabled = true;
-            btnServerConnect.PerformClick();
         }
 
+        // 來電裝置觸發事件
         protected override void DefWndProc(ref Message m)
         {
             switch (m.Msg)
@@ -137,6 +134,11 @@ namespace gosaicoCallerID
             }
         }
 
+        /// <summary>
+        /// 來電裝置觸發處理
+        /// </summary>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
         private void OnDeviceMsg(IntPtr wParam, IntPtr lParam)
         {
             int iEvent = wParam.ToInt32() % 65536;
@@ -166,9 +168,9 @@ namespace gosaicoCallerID
                 //話機狀態
                 case (int)AD800_STATUS.AD800_LINE_STATUS:
                     {
-                        if (phones.ContainsKey(iChannel + 1))
+                        if (phones.ContainsKey(iChannel))
                         {
-                            Phone phone = phones[iChannel + 1];
+                            Phone phone = phones[iChannel];
                             phone.Now = DateTime.Now;
                             switch (lParam.ToInt32())
                             {
@@ -181,8 +183,13 @@ namespace gosaicoCallerID
                                 case (int)AD800_LINESTATUS.AD800LINE_HOOKOFF://接起
                                     if (phone.Status == "Ringing")
                                     {
+                                        //計算通話時間
+                                        hookOffTime = DateTime.Now;
+
                                         phone.Status = "HookOff";
                                         PhoneStatus(phone, iEvent.ToString(), iChannel.ToString(), lParam.ToString());
+
+                                        PostData(new PhoneData(phone, callingTime));
                                     }
 
                                     break;
@@ -193,25 +200,38 @@ namespace gosaicoCallerID
                                     {
                                         phone.Status = "Missed";
                                         PhoneStatus(phone, iEvent.ToString(), iChannel.ToString(), lParam.ToString());
+                                        PostData(new PhoneData(phone, callingTime));
+
+                                        PostData(new PhoneData(phone, callingTime));
                                     }
                                     else if (phone.Status == "HookOff")
                                     {
+                                        //計算通話時間
+                                        hookOnTime = DateTime.Now;
+                                        TimeSpan diff = hookOnTime.Subtract(hookOffTime);
+                                        callingTime = (int)diff.TotalSeconds;
+
                                         phone.Status = "HookOn";
                                         PhoneStatus(phone, iEvent.ToString(), iChannel.ToString(), lParam.ToString());
+
+                                        PostData(new PhoneData(phone, callingTime));
                                     }
                                     break;
 
                                 case (int)AD800_LINESTATUS.AD800LINE_RING:
                                     if (phone.Status != "Ringing")
                                     {
+                                        //初始化通話時間
+                                        callingTime = 0;
+
                                         StringBuilder szBuff = new StringBuilder(128);
-                                        AD800_GetCallerId(phone.Line - 1, szBuff, 64);
+                                        AD800_GetCallerId(phone.Line, szBuff, 64);
                                         string str = szBuff.ToString();
-                                        //市話打進來,若是同縣市就不會顯示區碼,所以要另外加進去
-                                        //if (str[0] != '0') { str = ConfigurationManager.AppSettings["AreaCode"] + str; }
                                         phone.Num = str;
                                         phone.Status = "Ringing";
                                         PhoneStatus(phone, iEvent.ToString(), iChannel.ToString(), lParam.ToString());
+
+                                        PostData(new PhoneData(phone, callingTime));
                                     }
                                     break;
 
@@ -227,7 +247,7 @@ namespace gosaicoCallerID
                         int volt = (int)lParam;
                         if (volt > 20)
                         {
-                            if (!phones.ContainsKey(iChannel + 1))
+                            if (!phones.ContainsKey(iChannel))
                             {
                                 Phone phone = new Phone() { Line = iChannel };
                                 phones.Add(phone.Line, phone);
@@ -243,6 +263,13 @@ namespace gosaicoCallerID
             }
         }
 
+        /// <summary>
+        /// 電話狀態紀錄
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="Event"></param>
+        /// <param name="channel"></param>
+        /// <param name="lParam"></param>
         private void PhoneStatus(Phone phone, string Event, string channel, string lParam)
         {
             dataGridView1.Rows.Insert(0, phone.Date, phone.Time, phone.Line, phone.Num, phone.Status);
@@ -284,21 +311,44 @@ namespace gosaicoCallerID
             }
         }
 
-        private void btnServerConnect_Click(object sender, EventArgs e)
+        private async void PostData(PhoneData data)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            string errMsg = "";
+            HttpClient client = new HttpClient();
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(ConfigurationManager.AppSettings["API_url"], content);
+                response.EnsureSuccessStatusCode();
+                if (ConfigurationManager.AppSettings["Debug"] == "T")
+                {
+                    new LogMsg(LogType.INF, await response.Content.ReadAsStringAsync());
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMsg(LogType.ERROR, ex.Message);
+            }
+        }
 
-            if (CheckConnect.CheckServer(ref errMsg))
+        private class PhoneData
+        {
+            public string storeTransferCode;
+            public string lineNumber;
+            public string phoneNumber;
+            public string date;
+            public int callingTime;
+            public string status;
+
+            public PhoneData(Phone phone, int callingTime)
             {
-                new LogMsg(LogType.INF, "伺服器已連線");
+                //取值
+                this.callingTime = callingTime;
+                date = phone.Date;
+                lineNumber = phone.Line.ToString();
+                phoneNumber = phone.Num;
+                status = phone.Status;
+                storeTransferCode = ConfigurationManager.AppSettings["StoreID"];
             }
-            else
-            {
-                new LogMsg(LogType.ERROR, "伺服器斷線");
-                MessageBox.Show(errMsg, "伺服器斷線");
-            }
-            Cursor.Current = Cursors.Default;
         }
     }
 }

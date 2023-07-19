@@ -40,7 +40,6 @@ namespace gosaicoCallerID
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tmrNet = new System.Windows.Forms.Timer(this.components);
-            this.btnServerConnect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +70,7 @@ namespace gosaicoCallerID
             this.txtAPI_url.Location = new System.Drawing.Point(84, 382);
             this.txtAPI_url.Name = "txtAPI_url";
             this.txtAPI_url.ReadOnly = true;
-            this.txtAPI_url.Size = new System.Drawing.Size(450, 30);
+            this.txtAPI_url.Size = new System.Drawing.Size(546, 30);
             this.txtAPI_url.TabIndex = 3;
             // 
             // txtStroreId
@@ -91,6 +90,7 @@ namespace gosaicoCallerID
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtLog.Size = new System.Drawing.Size(770, 302);
             this.txtLog.TabIndex = 6;
             // 
@@ -136,24 +136,11 @@ namespace gosaicoCallerID
             // 
             this.tmrNet.Tick += new System.EventHandler(this.tmrNet_Tick);
             // 
-            // btnServerConnect
-            // 
-            this.btnServerConnect.AutoSize = true;
-            this.btnServerConnect.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnServerConnect.Location = new System.Drawing.Point(540, 378);
-            this.btnServerConnect.Name = "btnServerConnect";
-            this.btnServerConnect.Size = new System.Drawing.Size(90, 34);
-            this.btnServerConnect.TabIndex = 10;
-            this.btnServerConnect.Text = "重新連線";
-            this.btnServerConnect.UseVisualStyleBackColor = true;
-            this.btnServerConnect.Click += new System.EventHandler(this.btnServerConnect_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(801, 766);
-            this.Controls.Add(this.btnServerConnect);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
@@ -184,7 +171,6 @@ namespace gosaicoCallerID
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer tmrNet;
-        private System.Windows.Forms.Button btnServerConnect;
     }
 }
 
