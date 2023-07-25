@@ -95,7 +95,7 @@ namespace gosaicoCallerID
         private void Form1_Load(object sender, EventArgs e)
         {
             //標題
-            Text = ConfigurationManager.AppSettings["Title"] + " v0.3";
+            Text = ConfigurationManager.AppSettings["Title"] + " v0.4";
             //門市店號
             txtStroreId.Text = ConfigurationManager.AppSettings["StoreID"];
             //API url
@@ -272,13 +272,15 @@ namespace gosaicoCallerID
         /// <param name="lParam"></param>
         private void PhoneStatus(Phone phone, string Event, string channel, string lParam)
         {
-            dataGridView1.Rows.Insert(0, phone.Date, phone.Time, phone.Line, phone.Num, phone.Status);
+            dataGridView1.Rows.Insert(0, phone.Date, phone.Time, phone.Line + 1, phone.Num, phone.Status);
             new LogMsg(LogType.INF, $"Event:{Event},Channel:{channel} lParam:{lParam}");
+            int line = phone.Line + 1;
             Dictionary<string, string> dic = new Dictionary<string, string>()
             {
+
                 {"call_date",phone.Date },
                 {"call_time",phone.Time},
-                {"call_line",phone.Line.ToString() },
+                {"call_line",line.ToString() },
                 {"call_num",phone.Num},
                 {"call_status",phone.Status },
                 {"call_store",ConfigurationManager.AppSettings["StoreID"]}

@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static gosaicoCallerID.Form1;
@@ -26,9 +27,22 @@ namespace gosaicoCallerID
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            bool isRun;
+            System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess();
+            using (Mutex mutex = new Mutex(true, process.ProcessName, out isRun))
+            {
+                if (!isRun)
+                {
+                    return;
+                }
+                else
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new Form1());
+                }
+            }
+
         }
     }
 
@@ -54,7 +68,7 @@ namespace gosaicoCallerID
 
     public static class SQLLite
     {
-        private static string filePath = ConfigurationManager.AppSettings["DataSource"];
+        private static string filePath = Application.StartupPath + "\\" + ConfigurationManager.AppSettings["DataSource"];
         private static string _connectString = "Data Source = " + filePath;
 
         /// <summary>
@@ -302,6 +316,6 @@ namespace gosaicoCallerID
         /// <summary>
         ///線路
         /// </summary>
-        public int Line { get => _line; set => _line = value ; }
+        public int Line { get => _line; set => _line = value; }
     }
 }
